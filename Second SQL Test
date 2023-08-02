@@ -1,0 +1,14 @@
+SELECT e.FirstName, e.LastName, COALESCE(SUM(total_quantity), 0) AS TotalQuantity
+FROM Employees e
+LEFT JOIN (
+    SELECT o.EmployeeID, SUM(od.Quantity) AS total_quantity
+    FROM Orders o
+    LEFT JOIN OrderDetails od ON o.OrderID = od.OrderID
+    LEFT JOIN Products p ON od.ProductID = p.ProductID
+    LEFT JOIN Categories c ON p.CategoryID = c.CategoryID
+    WHERE c.CategoryName = 'Beverages'
+    GROUP BY o.EmployeeID
+) subquery ON e.EmployeeID = subquery.EmployeeID
+GROUP BY e.FirstName, e.LastName
+ORDER BY TotalQuantity DESC
+LIMIT 10;
