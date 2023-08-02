@@ -1,0 +1,7 @@
+SELECT e.FirstName, e.LastName, COALESCE(SUM(od.Quantity), 0) AS TotalQuantity
+FROM Employees e
+LEFT JOIN Orders o ON e.EmployeeID = o.EmployeeID
+LEFT JOIN OrderDetails od ON o.OrderID = od.OrderID
+GROUP BY e.FirstName, e.LastName
+ORDER BY TotalQuantity DESC
+LIMIT 10;
